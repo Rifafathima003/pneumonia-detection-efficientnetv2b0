@@ -1,50 +1,59 @@
-# pneumonia-detection-efficientnetv2b0
-Lung-region focused deep learning framework for multi-class pneumonia detection using EfficientNetV2 with confidence-aware decision support
+# 🩺 Lung-Region Focused Deep Learning Framework for Multi-Class Pneumonia Detection Using EfficientNetV2 and Confidence-Aware Decision Support
 
-# 🩺 Lung-Region Focused Pneumonia Detection using EfficientNetV2
+A clinically oriented deep learning framework for **multi-class pneumonia detection from chest X-ray images**, combining **lung-region segmentation, EfficientNetV2 classification, confidence calibration, explainability, and decision support**.
 
-## 📌 Overview
+Developed as part of the **MSc Data Science Dissertation – University of Kerala**.
 
-This project presents a **deep learning framework for multi-class pneumonia detection** from chest X-ray images. The system is designed not only for high accuracy but also for **clinical reliability, interpretability, and decision support**.
+---
 
-The model integrates:
+## 📌 Project Overview
 
-* **U-Net** for lung segmentation
-* **EfficientNetV2-B0** for classification
-* **Confidence calibration** for reliable predictions
-* **Explainability techniques** for transparency
+This project proposes an **end-to-end two-phase medical imaging pipeline** for detecting pneumonia from chest X-rays while prioritizing:
 
-This project was developed as part of a Master's dissertation.
+* Reliability
+* Interpretability
+* Clinical applicability
+* Confidence-aware decision support
+
+Unlike conventional classification-only approaches, this framework first isolates **lung regions using U-Net segmentation**, then performs classification using **EfficientNetV2-B0**.
+
+A key design principle is that **provided lung masks are used only for U-Net supervision**. During inference, the trained U-Net autonomously generates masks from raw X-rays, enabling real-world deployment.
 
 ---
 
 ## 🎯 Objectives
 
-* Detect and classify:
+This framework aims to:
+
+* Classify chest X-rays into:
 
   * Normal
-  * Bacterial Pneumonia
-  * Viral Pneumonia
   * COVID-19 Pneumonia
-* Focus only on **lung regions** to avoid background noise
-* Improve **model trustworthiness** using confidence-based predictions
+  * Viral Pneumonia
+  * Bacterial Pneumonia
+* Restrict model attention to clinically relevant lung regions
+* Improve reliability using confidence calibration
+* Enhance interpretability through explainable AI
+* Support clinical workflows through confidence-based decision routing
 
 ---
 
-## 🧠 Key Features
+# 🧠 Key Features
 
-* ✅ Lung-region focused learning using U-Net
-* ✅ Transfer learning with EfficientNetV2-B0
-* ✅ Image enhancement for better feature visibility
-* ✅ Confidence calibration (temperature scaling)
-* ✅ Explainability using occlusion sensitivity
-* ✅ Decision support system based on prediction confidence
+✅ Lung-region focused preprocessing using U-Net
+✅ EfficientNetV2-B0 transfer learning classifier
+✅ Two-stage training strategy
+✅ Confidence calibration using Temperature Scaling
+✅ Explainability using Occlusion Sensitivity
+✅ Feature visualization using t-SNE
+✅ Confidence-aware clinical decision support
+✅ Real-world inference pipeline
 
 ---
 
-## ⚙️ System Architecture
+# 🏗 System Architecture
 
-```
+```text
 Chest X-ray Input
         ↓
 Preprocessing & Cleaning
@@ -53,11 +62,13 @@ U-Net Lung Segmentation
         ↓
 Lung Mask Application
         ↓
-Image Enhancement
+Quality Verification
         ↓
 EfficientNetV2-B0 Classification
         ↓
 Probability Output
+        ↓
+Explainability Analysis
         ↓
 Confidence Calibration
         ↓
@@ -66,32 +77,235 @@ Decision Support System
 
 ---
 
-## 📊 Results
+# ⚙️ Methodology
 
-* **Accuracy:** 78.3%
-* **F1 Score:** 0.78
-* **Best Performance:** Bacterial Pneumonia
-* Strong class separability (ROC-AUC up to 1.00)
+## Phase 1 — Lung Segmentation
 
-### Key Insights:
+### U-Net
 
-* Model performs best for bacterial pneumonia
-* Viral and COVID cases show overlap (expected clinically)
-* Confidence calibration improves prediction reliability
+* Supervised training using image-mask pairs
+* Generates masks automatically on unseen X-rays
+* Binary segmentation output
+
+### Preprocessing
+
+* Resize → 224 × 224
+* Normalization
+* Brightness enhancement
+* Quality verification
 
 ---
 
-## 📂 Project Structure
+## Phase 2 — Pneumonia Classification
 
+### EfficientNetV2-B0
+
+Transfer learning approach:
+
+### Stage 1 — Feature Extraction
+
+* Frozen backbone
+* Train classification head
+
+### Stage 2 — Fine-Tuning
+
+* Top 30 layers unfrozen
+* Domain adaptation
+
+### Classification Classes
+
+| Class     | Description                 |
+| --------- | --------------------------- |
+| NORMAL    | Healthy lungs               |
+| COVID     | COVID-19 Pneumonia          |
+| VIRAL     | Viral Pneumonia             |
+| BACTERIAL | Lung Opacity (mapped proxy) |
+
+---
+
+# 📊 Results
+
+## Final Test Performance
+
+| Metric                   | Value      |
+| ------------------------ | ---------- |
+| Accuracy                 | **78.30%** |
+| Macro F1 Score           | **0.78**   |
+| Test Loss                | **0.5327** |
+| Best Validation Accuracy | **77.93%** |
+
+---
+
+## Per-Class Performance
+
+| Class     | Precision | Recall | F1   |
+| --------- | --------- | ------ | ---- |
+| NORMAL    | 0.74      | 0.72   | 0.73 |
+| COVID     | 0.70      | 0.66   | 0.68 |
+| VIRAL     | 0.73      | 0.82   | 0.77 |
+| BACTERIAL | 0.97      | 0.93   | 0.95 |
+
+---
+
+## Key Findings
+
+* Best performance observed for **Bacterial Pneumonia**
+* COVID and Viral classes show expected radiographic overlap
+* Calibration improved confidence reliability
+* Strong ROC-AUC performance across classes
+
+---
+# 📸 Results Preview
+
+## Confusion Matrix
+
+<p align="center">
+<img src="assets/confusion_matrix.png" width="600">
+</p>
+
+---
+
+## ROC Curve
+
+<p align="center">
+<img src="assets/roc_curve.png" width="700">
+</p>
+
+---
+
+## t-SNE Feature Visualization
+
+<p align="center">
+<img src="assets/t-sne.png" width="700">
+</p>
+
+---
+
+## Explainability — Occlusion Sensitivity
+
+<p align="center">
+<img src="assets/occlusion_map.png" width="700">
+</p>
+
+---
+
+## Sample Prediction
+
+<p align="center">
+<img src="assets/sample_prediction.png" width="700">
+</p>
+# 📈 Evaluation Metrics
+
+The model was evaluated using:
+
+* Accuracy
+* Precision
+* Recall
+* F1-Score
+* Confusion Matrix
+* ROC Curve
+* Precision-Recall Curve
+* Misclassification Analysis
+
+---
+
+# 🔍 Explainability
+
+To improve model transparency:
+
+## Occlusion Sensitivity
+
+Highlights image regions contributing most to predictions.
+
+## t-SNE Visualization
+
+Visualizes feature separability using penultimate-layer embeddings.
+
+---
+
+# 📉 Confidence Calibration
+
+Temperature Scaling was applied to reduce model overconfidence.
+
+Decision Routing:
+
+| Confidence         | Action                               |
+| ------------------ | ------------------------------------ |
+| ≥ 0.80 (Normal)    | Standard follow-up                   |
+| ≥ 0.80 (Infection) | Clinical protocol                    |
+| 0.60–0.80          | Expert radiologist review            |
+| < 0.60             | Recommend CT / further investigation |
+
+---
+
+# 📦 Dataset
+
+Dataset used:
+
+**COVID-19 Radiography Database**
+
+🔗 https://www.kaggle.com/datasets/tawsifurrahman/covid19-radiography-database
+
+---
+
+## Dataset Structure
+
+```text
+data/
+
+Normal/
+COVID/
+Viral Pneumonia/
+Lung_Opacity/
 ```
+
+---
+
+# ⚙️ Installation
+
+Clone repository:
+
+```bash
+git clone https://github.com/your-username/pneumonia-detection-efficientnetv2.git
+
+cd pneumonia-detection-efficientnetv2
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# ▶️ Run Project
+
+Launch notebook:
+
+```bash
+jupyter notebook
+```
+
+Open:
+
+```text
+notebook/pneumonia_model.ipynb
+```
+
+---
+
+# 📂 Repository Structure
+
+```text
 pneumonia-detection-efficientnetv2/
-│
+
 ├── notebook/
 │   └── pneumonia_model.ipynb
-│
+
 ├── reports/
-│   └── pneumonia_report.pdf
-│
+│   └── dissertation_report.pdf
+
 ├── requirements.txt
 ├── README.md
 └── .gitignore
@@ -99,182 +313,35 @@ pneumonia-detection-efficientnetv2/
 
 ---
 
-## 📦 Dataset
+# ⚠️ Limitations
 
-This project uses the **COVID-19 Radiography Dataset** from Kaggle:
-
-🔗 https://www.kaggle.com/datasets/tawsifurrahman/covid19-radiography-database
-
-### 📥 How to Download Dataset
-
-1. Install Kaggle API:
-
-```
-pip install kaggle
-```
-
-2. Download your Kaggle API key:
-
-* Go to: https://www.kaggle.com/account
-* Click **"Create New API Token"**
-* Place `kaggle.json` in:
-
-```
-C:\Users\<your-username>\.kaggle\
-```
-
-3. Run the following command:
-
-```
-kaggle datasets download -d tawsifurrahman/covid19-radiography-database
-```
-
-4. Extract dataset and place it inside:
-
-```
-data/
-```
-
-### 📁 Expected Dataset Structure
-
-```
-data/
-├── Normal/
-├── COVID/
-├── Viral Pneumonia/
-└── Lung_Opacity/   (Bacterial Pneumonia)
-```
-
----
-
-## ⚙️ Installation
-
-Clone the repository:
-
-```
-git clone https://github.com/your-username/pneumonia-detection-efficientnetv2.git
-cd pneumonia-detection-efficientnetv2
-```
-
-Install dependencies:
-
-```
-pip install -r requirements.txt
-```
-
----
-
-## ▶️ How to Run
-
-```
-jupyter notebook
-```
-
-Open:
-
-```
-notebook/pneumonia_model.ipynb
-```
-
----
-
-## 🧪 Model Details
-
-### 🔹 Preprocessing
-
-* Image resizing (224 × 224)
-* Normalization
-* Dataset balancing
-
-### 🔹 Segmentation
-
-* U-Net for lung extraction
-* Removes irrelevant background noise
-
-### 🔹 Classification
-
-* EfficientNetV2-B0 (Transfer Learning)
-* Three-stage training:
-
-  * Feature extraction
-  * Partial fine-tuning
-  * Full fine-tuning
-
-### 🔹 Loss & Optimization
-
-* Categorical Cross-Entropy
-* Adam optimizer
-
----
-
-## 📈 Evaluation Metrics
-
-* Accuracy
-* Precision
-* Recall
-* F1-score
-* Confusion Matrix
-* ROC Curve
-* Precision-Recall Curve
-
----
-
-## 🔍 Explainability
-
-* Occlusion Sensitivity Maps
-* Feature visualization
-* t-SNE clustering
-
-These help ensure the model focuses on **clinically relevant lung regions**.
-
----
-
-## 📉 Confidence Calibration
-
-Temperature scaling is applied to reduce overconfidence:
-
-* ≥ 0.85 → Accept prediction
-* 0.60 – 0.85 → Expert review
-* < 0.60 → Further investigation
-
----
-
-## ⚠️ Limitations
-
-* Confusion between viral and COVID pneumonia
+* COVID and Viral pneumonia overlap
 * Sensitive to image quality
 * Requires GPU for training
-* No clinical metadata used
+* No clinical metadata integration
+* Lung Opacity used as bacterial proxy
 
 ---
 
-## 🚀 Future Improvements
+# 🚀 Future Work
 
 * Lesion localization
-* Attention mechanisms
-* Multi-modal data integration
-* Model deployment (web app / edge devices)
+* Attention-based architectures
+* Multi-modal learning
+* Streamlit/Web deployment
+* Clinical validation
 
 ---
 
-## 📄 Report
-
-Detailed project report available in:
-
-```
-reports/pneumonia_report.pdf
-```
-
----
-
-## 👩‍💻 Author
+# 👩‍💻 Author
 
 **Rifa Fathima**
 MSc Data Science
+Department of Futures Studies
 University of Kerala
 
 ---
 
-## ⭐ If you found this useful
+## ⭐ Support
 
-Give this repo a ⭐ and share!
+If you found this project useful, consider giving the repository a **star ⭐**
