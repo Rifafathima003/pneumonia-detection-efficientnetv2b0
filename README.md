@@ -68,8 +68,8 @@ Decision Support System
 
 ## 📊 Results
 
-* **Accuracy:** 82%
-* **F1 Score:** 0.82
+* **Accuracy:** 78.3%
+* **F1 Score:** 0.78
 * **Best Performance:** Bacterial Pneumonia
 * Strong class separability (ROC-AUC up to 1.00)
 
